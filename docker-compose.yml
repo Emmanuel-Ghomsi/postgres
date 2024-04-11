@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nginx-proxy
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      VIRTUAL_PORT: ${ADMINER_PORT}
+      HTTPS_METHOD: redirect
+      PROXY_ADDRESS_FORWARDING: "true"
+    networks:
+      - nginx-proxy
+
+volumes:
+  postgres_data:
+
+networks:
+  nginx-proxy:
+    external: true
