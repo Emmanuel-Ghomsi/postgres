@@ -25,6 +25,8 @@ services:
       VIRTUAL_PORT: ${ADMINER_PORT}
       HTTPS_METHOD: redirect
       PROXY_ADDRESS_FORWARDING: "true"
+    ports:
+      - ${ADMINER_PORT}:8080
     networks:
       - nginx-proxy
 
