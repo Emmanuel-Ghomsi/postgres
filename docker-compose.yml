@@ -18,15 +18,27 @@ services:
   adminer:
     image: adminer
     restart: always
+    ports:
+      - ${ADMINER_PORT}:8080
+    networks:
+      - nginx-proxy
+
+  nginx:
+    image: nginx:latest
+    container_name: adminer-nginx
     environment:
+      # Reverse proxy Configuration
       VIRTUAL_HOST: ${VIRTUAL_HOST}
       LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-      VIRTUAL_PORT: ${ADMINER_PORT}
+      VIRTUAL_PORT: ${NGINX_ACCESS_PORT}
       HTTPS_METHOD: redirect
       PROXY_ADDRESS_FORWARDING: "true"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    command: ["nginx-debug", "-g", "daemon off;"]
     ports:
-      - ${ADMINER_PORT}:8080
+      - ${NGINX_ACCESS_PORT}:${NGINX_ACCESS_PORT}
     networks:
       - nginx-proxy
 
