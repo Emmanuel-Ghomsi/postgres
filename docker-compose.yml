@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: hkdigitals
+      POSTGRES_PASSWORD: hkdigitals
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistance des données
+
+  pgadmin:
+    image: dpage/pgadmin4:7
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: support@hkdigitals.fr
+      PGADMIN_DEFAULT_PASSWORD: hkdigitals
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:  # Définition du volume persistant
