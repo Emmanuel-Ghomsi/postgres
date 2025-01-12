@@ -8,12 +8,10 @@ services:
       POSTGRES_DB: mydb
     ports:
       - "5432:5432"
-    expose:
-      - "5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Persistance des données
     networks:
-      - db-network
+      - shared-network
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -26,10 +24,11 @@ services:
     depends_on:
       - postgres
     networks:
-      - db-network
+      - shared-network
 
 volumes:
   postgres_data:  # Définition du volume persistant
 
 networks:
-  db-network:
+  shared-network:
+    external: true  # Utiliser le réseau partagé existant
